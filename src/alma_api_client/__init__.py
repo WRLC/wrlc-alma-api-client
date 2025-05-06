@@ -13,7 +13,7 @@ try:
     # The package name argument MUST match the distribution name
     # specified in your pyproject.toml (e.g., under [tool.poetry.name]
     # or [project.name]). It often uses hyphens.
-    __version__ = importlib.metadata.version("alma-api-client")
+    __version__ = importlib.metadata.version("wrlc-alma-api-client")
 
 except importlib.metadata.PackageNotFoundError:
     # This happens if the package is not installed (e.g., you are running
