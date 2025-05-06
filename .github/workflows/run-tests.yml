@@ -31,7 +31,7 @@ jobs:
           virtualenvs-in-project: true # Keep venv in project for caching (optional)
 
       - name: Install dependencies
-        run: poetry install --no-interaction --no-root # Install dependencies, not the package itself as editable
+        run: poetry install --no-interaction
 
       - name: Run tests
         run: poetry run pytest # Or your specific test command, e.g., poetry run python -m unittest discover
