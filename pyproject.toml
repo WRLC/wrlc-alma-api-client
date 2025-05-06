@@ -1,6 +1,6 @@
 [project]
 name = "wrlc-alma-api-client"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = [
     {name = "Tom Boone",email = "boone@wrlc.org"}
@@ -21,7 +21,7 @@ authors = ["Tom Boone <boone@wrlc.org>"]
 readme = "README.md"
 license = "MIT"
 packages = [
-    { include = "alma_api_client", from = "src" }
+    { include = "wrlc_alma_api_client", from = "src" }
 ]
 
 [build-system]

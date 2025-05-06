@@ -6,10 +6,10 @@ import requests
 from unittest.mock import MagicMock
 
 # Imports from the package
-from alma_api_client.client import AlmaApiClient
-from alma_api_client.api.holding import HoldingsAPI
-from alma_api_client.models.holding import Holding  # Import Holding and BibLinkData
-from alma_api_client.exceptions import AlmaApiError, NotFoundError, InvalidInputError
+from wrlc_alma_api_client.client import AlmaApiClient
+from wrlc_alma_api_client.api.holding import HoldingsAPI
+from wrlc_alma_api_client.models.holding import Holding  # Import Holding and BibLinkData
+from wrlc_alma_api_client.exceptions import AlmaApiError, NotFoundError, InvalidInputError
 
 
 # --- Fixtures ---

@@ -24,15 +24,15 @@ Dependencies: `requests`, `pydantic`, `xmltodict`.
 ## Quick Start
 
 ```python
-from alma_api_client import AlmaApiClient
-from alma_api_client.exceptions import AlmaApiError, NotFoundError
+from wrlc_alma_api_client import AlmaApiClient
+from wrlc_alma_api_client.exceptions import AlmaApiError, NotFoundError
 import os
 
 # --- Configuration ---
 # Best practice: Use environment variables or a config management tool
 # api_key = os.getenv("ALMA_API_KEY")
-api_key = "YOUR_ALMA_API_KEY" # Replace with your key
-alma_region = "NA" # Your Alma region: NA, EU, APAC, etc.
+api_key = "YOUR_ALMA_API_KEY"  # Replace with your key
+alma_region = "NA"  # Your Alma region: NA, EU, APAC, etc.
 
 if not api_key:
     raise ValueError("Please provide an ALMA_API_KEY.")
@@ -43,13 +43,13 @@ client = AlmaApiClient(api_key=api_key, region=alma_region)
 # --- Example Usage ---
 try:
     # Get a Bib record
-    mms_id_to_get = "991234567890123" # Example MMS ID
+    mms_id_to_get = "991234567890123"  # Example MMS ID
     bib = client.bibs.get_bib(mms_id=mms_id_to_get)
     print(f"Fetched Bib Title: {bib.title}")
     print(f"MMS ID: {bib.mms_id}")
 
     # Get items for a holding
-    holding_id_to_get_items = "229999999000541" # Example Holding ID
+    holding_id_to_get_items = "229999999000541"  # Example Holding ID
     items = client.items.get_holding_items(mms_id=mms_id_to_get, holding_id=holding_id_to_get_items)
     print(f"\nFound {len(items)} item(s) for Holding {holding_id_to_get_items}:")
     for item in items:

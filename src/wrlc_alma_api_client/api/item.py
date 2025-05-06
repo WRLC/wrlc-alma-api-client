@@ -3,8 +3,8 @@
 from typing import TYPE_CHECKING, Optional, Dict, Any, Union, List
 import requests
 from pydantic import ValidationError
-from alma_api_client.exceptions import AlmaApiError
-from alma_api_client.models.item import Item
+from wrlc_alma_api_client.exceptions import AlmaApiError
+from wrlc_alma_api_client.models.item import Item
 
 # Use TYPE_CHECKING to avoid circular import issues with the client
 if TYPE_CHECKING:
