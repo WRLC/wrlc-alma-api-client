@@ -5,10 +5,10 @@ import copy
 import pytest
 import requests
 from unittest.mock import MagicMock
-from api_client.client import AlmaApiClient
-from api_client.api.item import ItemsAPI
-from api_client.models.item import Item
-from api_client.exceptions import AlmaApiError, NotFoundError, InvalidInputError
+from wrlc.alma.api_client.client import AlmaApiClient
+from wrlc.alma.api_client.api.item import ItemsAPI
+from wrlc.alma.api_client.models.item import Item
+from wrlc.alma.api_client.exceptions import AlmaApiError, NotFoundError, InvalidInputError
 
 # --- Constants ---
 TEST_MMS_ID = "991111111000541"

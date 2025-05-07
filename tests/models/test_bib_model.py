@@ -4,7 +4,7 @@ import pytest
 from pydantic import ValidationError
 # noinspection PyUnresolvedReferences
 from datetime import datetime, timezone, date
-from api_client.models.bib import Bib, CodeDesc
+from wrlc.alma.api_client.models.bib import Bib, CodeDesc
 
 MINIMAL_BIB_DATA = {"mms_id": "991234567890123"}
 

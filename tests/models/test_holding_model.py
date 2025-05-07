@@ -4,8 +4,8 @@ import pytest
 from pydantic import ValidationError
 # noinspection PyUnresolvedReferences
 from datetime import datetime, timezone, date
-from api_client.models.bib import CodeDesc
-from api_client.models.holding import Holding, BibLinkData
+from wrlc.alma.api_client.models.bib import CodeDesc
+from wrlc.alma.api_client.models.holding import Holding, BibLinkData
 
 
 MINIMAL_HOLDING_DATA = {"holding_id": "221111111000541"}

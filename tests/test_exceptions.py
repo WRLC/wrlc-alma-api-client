@@ -14,13 +14,8 @@ except ImportError:
     XMLTODICT_INSTALLED = False
 
 # Imports from the package
-from api_client.exceptions import (
-    AlmaApiError,
-    AuthenticationError,
-    NotFoundError,
-    RateLimitError,
-    InvalidInputError
-)
+from wrlc.alma.api_client.exceptions import (AlmaApiError, AuthenticationError, NotFoundError, RateLimitError,
+                                             InvalidInputError)
 
 
 # --- Fixtures ---
@@ -102,6 +97,7 @@ def test_alma_api_error_init_basic():
     assert str(exc) == ": Base message"  # Includes colon from prefix logic
 
 
+# noinspection HttpUrlsUsage
 def test_alma_api_error_init_with_args():
     """Test initialization with status code and URL."""
     url = "http://test.com/path"
@@ -261,6 +257,7 @@ def test_subclass_defaults():
     assert "HTTP 400" in str(invalid_exc)
 
 
+# noinspection HttpUrlsUsage
 def test_subclass_with_args_and_detail(mock_response):
     """Test that subclasses correctly use base class __init__ for formatting and detail."""
     mock_response.status_code = 400

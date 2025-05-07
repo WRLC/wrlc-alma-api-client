@@ -3,9 +3,9 @@
 import pytest
 from pydantic import ValidationError
 from datetime import datetime, date, timezone
-from api_client.models.bib import CodeDesc
-from api_client.models.holding import BibLinkData
-from api_client.models.item import Item, ItemData, HoldingLinkDataForItem
+from wrlc.alma.api_client.models.bib import CodeDesc
+from wrlc.alma.api_client.models.holding import BibLinkData
+from wrlc.alma.api_client.models.item import Item, ItemData, HoldingLinkDataForItem
 
 
 VALID_CODEDESC_BOOK = {"value": "BOOK", "desc": "Book"}
