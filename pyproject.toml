@@ -1,6 +1,6 @@
 [project]
 name = "wrlc-alma-api-client"
-version = "0.1.1"
+version = "0.1.2"
 description = ""
 authors = [
     {name = "Tom Boone",email = "boone@wrlc.org"}
@@ -10,7 +10,7 @@ requires-python = ">=3.11"
 dependencies = [
     "pydantic (>=2.11.4,<3.0.0)",
     "requests>=2.31.0,<3.0.0",
-    "xmltodict>=0.13.0,<0.14.0"
+    "xmltodict>=0.13.0,<0.15.0"
 ]
 
 [tool.poetry]
