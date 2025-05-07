@@ -3,10 +3,10 @@
 import pytest
 import requests
 from unittest.mock import MagicMock
-from wrlc_alma_api_client.client import AlmaApiClient
-from wrlc_alma_api_client.api.bib import BibsAPI
-from wrlc_alma_api_client.models.bib import Bib
-from wrlc_alma_api_client.exceptions import AlmaApiError, NotFoundError, InvalidInputError
+from api_client.client import AlmaApiClient
+from api_client.api.bib import BibsAPI
+from api_client.models.bib import Bib
+from api_client.exceptions import AlmaApiError, NotFoundError, InvalidInputError
 
 
 # --- Fixtures ---

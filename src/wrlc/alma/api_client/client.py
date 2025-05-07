@@ -3,10 +3,7 @@
 import requests
 from typing import Optional, Dict, Any, Union
 import importlib.metadata
-
-from .exceptions import (
-    AlmaApiError,
-    AuthenticationError)
+from wrlc.alma.api_client.exceptions import AlmaApiError, AuthenticationError
 
 try:
     from .api.analytics import AnalyticsAPI

@@ -24,8 +24,8 @@ Dependencies: `requests`, `pydantic`, `xmltodict`.
 ## Quick Start
 
 ```python
-from wrlc_alma_api_client import AlmaApiClient
-from wrlc_alma_api_client.exceptions import AlmaApiError, NotFoundError
+from api_client import AlmaApiClient
+from api_client.exceptions import AlmaApiError, NotFoundError
 import os
 
 # --- Configuration ---

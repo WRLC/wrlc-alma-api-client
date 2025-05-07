@@ -1,7 +1,6 @@
 """Utility functions for parsing various data types safely."""
 
 import warnings
-# noinspection PyUnresolvedReferences
 from datetime import datetime, date, timezone
 from typing import Optional, Union, Any
 

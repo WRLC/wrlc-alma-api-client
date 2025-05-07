@@ -7,9 +7,8 @@ import requests  # Ensure requests is imported for exception handling
 import xmltodict
 from xml.parsers.expat import ExpatError  # <-- FIX: Import ExpatError
 from pydantic import ValidationError  # Ensure ValidationError is imported
-
-from ..exceptions import AlmaApiError  # Ensure exceptions are imported
-from ..models.analytics import AnalyticsReportResults, AnalyticsPath
+from wrlc.alma.api_client.exceptions import AlmaApiError  # Ensure exceptions are imported
+from wrlc.alma.api_client.models.analytics import AnalyticsReportResults, AnalyticsPath
 
 # Use TYPE_CHECKING to avoid circular import issues with the client
 if TYPE_CHECKING:

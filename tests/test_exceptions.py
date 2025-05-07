@@ -14,7 +14,7 @@ except ImportError:
     XMLTODICT_INSTALLED = False
 
 # Imports from the package
-from wrlc_alma_api_client.exceptions import (
+from api_client.exceptions import (
     AlmaApiError,
     AuthenticationError,
     NotFoundError,

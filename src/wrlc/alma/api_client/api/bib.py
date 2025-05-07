@@ -4,12 +4,12 @@ import warnings
 from typing import TYPE_CHECKING, Optional, Dict, Any, Union
 import requests
 from pydantic import ValidationError
-from wrlc_alma_api_client.exceptions import AlmaApiError, InvalidInputError
-from wrlc_alma_api_client.models.bib import Bib
+from wrlc.alma.api_client.exceptions import AlmaApiError, InvalidInputError
+from wrlc.alma.api_client.models.bib import Bib
 
 # Use TYPE_CHECKING to avoid circular import issues with the client
 if TYPE_CHECKING:
-    from ..client import AlmaApiClient  # pragma: no cover
+    from wrlc.alma.api_client.client import AlmaApiClient  # pragma: no cover
 
 
 # noinspection PyProtectedMember,PyUnusedLocal

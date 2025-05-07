@@ -3,10 +3,10 @@
 import pytest
 import requests
 from unittest.mock import MagicMock
-from wrlc_alma_api_client.client import AlmaApiClient
-from wrlc_alma_api_client.api.analytics import AnalyticsAPI
-from wrlc_alma_api_client.models.analytics import AnalyticsReportResults, AnalyticsPath
-from wrlc_alma_api_client.exceptions import AlmaApiError, NotFoundError
+from api_client.client import AlmaApiClient
+from api_client.api.analytics import AnalyticsAPI
+from api_client.models.analytics import AnalyticsReportResults, AnalyticsPath
+from api_client.exceptions import AlmaApiError, NotFoundError
 
 
 @pytest.fixture

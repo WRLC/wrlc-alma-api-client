@@ -4,7 +4,7 @@ import warnings
 import pytest
 from pydantic import ValidationError
 
-from wrlc_alma_api_client.models.analytics import (
+from api_client.models.analytics import (
     AnalyticsColumn,
     AnalyticsReportResults,
     AnalyticsPath

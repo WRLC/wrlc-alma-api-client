@@ -4,7 +4,7 @@ from typing import Optional, Any
 from pydantic import BaseModel, Field, field_validator
 from datetime import datetime, date
 import warnings
-from .utils import parse_boolean_optional, parse_datetime_optional, parse_date_optional
+from wrlc.alma.api_client.models.utils import parse_boolean_optional, parse_datetime_optional, parse_date_optional
 
 
 try:
