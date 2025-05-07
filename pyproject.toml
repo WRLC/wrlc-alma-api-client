@@ -21,7 +21,7 @@ authors = ["Tom Boone <boone@wrlc.org>"]
 readme = "README.md"
 license = "MIT"
 packages = [
-    { include = "wrlc_alma_api_client", from = "src" }
+    { include = "wrlc", from = "src" }
 ]
 
 [build-system]
