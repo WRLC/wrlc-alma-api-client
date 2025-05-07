@@ -21,11 +21,18 @@ Requires Python 3.8+ (due to dependencies like `importlib.metadata` and Pydantic
 
 Dependencies: `requests`, `pydantic`, `xmltodict`.
 
+## Installation
+Install via pip:
+
+```bash
+pip install wrlc-alma-api-client
+```
+
 ## Quick Start
 
 ```python
-from api_client import AlmaApiClient
-from api_client.exceptions import AlmaApiError, NotFoundError
+from wrlc.alma.api_client import AlmaApiClient
+from wrlc.alma.api_client.exceptions import AlmaApiError, NotFoundError
 import os
 
 # --- Configuration ---
