@@ -4,31 +4,11 @@ import requests
 from typing import Optional, Dict, Any, Union
 import importlib.metadata
 from wrlc.alma.api_client.exceptions import AlmaApiError, AuthenticationError
+from wrlc.alma.api_client.api.analytics import AnalyticsAPI
+from wrlc.alma.api_client.api.bib import BibsAPI
+from wrlc.alma.api_client.api.holding import HoldingsAPI
+from wrlc.alma.api_client.api.item import ItemsAPI
 
-try:
-    from .api.analytics import AnalyticsAPI
-except ImportError:
-    class AnalyticsAPI:
-        """A placeholder for the Analytics API class."""
-        pass
-try:
-    from .api.bibs import BibsAPI
-except ImportError:
-    class BibsAPI:
-        """A placeholder for the Bibs API class."""
-        pass
-try:
-    from .api.holdings import HoldingsAPI
-except ImportError:
-    class HoldingsAPI:
-        """A placeholder for the Holdings API class."""
-        pass
-try:
-    from .api.items import ItemsAPI
-except ImportError:
-    class ItemsAPI:
-        """A placeholder for the Items API class."""
-        pass
 try:
     # noinspection PyUnresolvedReferences
     import xmltodict
