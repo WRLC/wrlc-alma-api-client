@@ -140,7 +140,7 @@ class AnalyticsAPI:
         if filter_xml:
             params["filter"] = filter_xml
 
-        headers = {"Accept": "application/json, application/xml;q=0.9"}
+        headers = {"Accept": "*/*"}
         response = self.client._get(endpoint, params=params, headers=headers)
         content_type = response.headers.get("Content-Type", "")
         report_data_for_model: Dict[str, Any] = {}  # Initialize dict to pass to model
