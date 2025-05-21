@@ -77,7 +77,7 @@ SAMPLE_REPORT_JSON = {
     }
 }
 
-SAMPLE_REPORT_XML = b"""<?xml version="1.0" encoding="UTF-8"?> <QueryResult 
+SAMPLE_REPORT_XML = b"""<?xml version="1.0" encoding="UTF-8"?> <report> <QueryResult 
 xmlns="urn:schemas-microsoft-com:xml-analysis:rowset"> <ResultXml> <rowset 
 xmlns="urn:schemas-microsoft-com:xml-analysis:rowset"> <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
 xmlns:saw-sql="urn:saw-sql" targetNamespace="urn:schemas-microsoft-com:xml-analysis:rowset"> <xsd:complexType 
@@ -85,7 +85,7 @@ name="Row"> <xsd:sequence> <xsd:element name="Column0" saw-sql:columnHeading="MM
 <xsd:element name="Column1" saw-sql:columnHeading="Title" type="xsd:string"/> </xsd:sequence> </xsd:complexType> 
 </xsd:schema> <Row><Column0>99123</Column0><Column1>Title A</Column1></Row> 
 <Row><Column0>99456</Column0><Column1>Title B</Column1></Row> </rowset> </ResultXml> 
-<ResumptionToken>tokenXML123</ResumptionToken> <IsFinished>false</IsFinished> </QueryResult>"""
+<ResumptionToken>tokenXML123</ResumptionToken> <IsFinished>false</IsFinished> </QueryResult> </report>"""
 
 
 def test_list_paths_success_json(analytics_api, mock_alma_client, mock_response):
@@ -208,7 +208,7 @@ def test_get_report_success_json(analytics_api, mock_alma_client, mock_response)
     mock_alma_client._get.assert_called_once_with(
         "/analytics/reports",
         params=expected_params,
-        headers=pytest.approx({"Accept": "application/json, application/xml;q=0.9"})
+        headers={"Accept": "*/*"}
     )
     assert isinstance(result, AnalyticsReportResults)
     assert result.is_finished is False
@@ -237,7 +237,7 @@ def test_get_report_success_xml(analytics_api, mock_alma_client, mock_response):
     mock_alma_client._get.assert_called_once_with(
         "/analytics/reports",
         params=expected_params,
-        headers=pytest.approx({"Accept": "application/json, application/xml;q=0.9"})
+        headers={"Accept": "*/*"}
     )
     assert isinstance(result, AnalyticsReportResults)
     assert result.is_finished is False
@@ -277,7 +277,7 @@ def test_get_report_with_params(analytics_api, mock_alma_client, mock_response):
     mock_alma_client._get.assert_called_once_with(
         "/analytics/reports",
         params=expected_params,
-        headers=pytest.approx({"Accept": "application/json, application/xml;q=0.9"})
+        headers={"Accept": "*/*"}
     )
 
 

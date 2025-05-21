@@ -3,11 +3,11 @@
 
 import warnings
 from typing import TYPE_CHECKING, Optional, Dict, List, Any
-import requests  # Ensure requests is imported for exception handling
+import requests
 import xmltodict
-from xml.parsers.expat import ExpatError  # <-- FIX: Import ExpatError
-from pydantic import ValidationError  # Ensure ValidationError is imported
-from wrlc.alma.api_client.exceptions import AlmaApiError  # Ensure exceptions are imported
+from xml.parsers.expat import ExpatError
+from pydantic import ValidationError
+from wrlc.alma.api_client.exceptions import AlmaApiError
 from wrlc.alma.api_client.models.analytics import AnalyticsReportResults, AnalyticsPath
 
 # Use TYPE_CHECKING to avoid circular import issues with the client
@@ -28,14 +28,10 @@ class AnalyticsAPI:
         """
         self.client = client
 
-    # _parse_analytics_xml_results helper remains the same as previously provided
     def _parse_analytics_xml_results(self, xml_data: bytes) -> Dict[str, Any]:
         """
         Parses the complex Alma Analytics XML report result into a dictionary
         approximating the structure needed by the AnalyticsReportResults model.
-
-        Note: This is a simplified parser and might need adjustments based on
-              specific report structures or edge cases. Prefer JSON responses.
 
         Args:
             xml_data: The raw XML bytes response body.
@@ -44,48 +40,48 @@ class AnalyticsAPI:
             A dictionary structured for the AnalyticsReportResults model.
 
         Raises:
-            AlmaApiError: If parsing fails significantly.
+            AlmaApiError: If parsing fails significantly or essential data is missing.
         """
         try:
-            # Use process_namespaces and specific namespace map if needed, or keep simple
             data = xmltodict.parse(xml_data, process_namespaces=True,
                                    namespaces={'urn:schemas-microsoft-com:xml-analysis:rowset': None})
 
-            query_result = data.get('QueryResult', {})
-            report_element = query_result.get('ResultXml', {}).get('rowset', {}).get('Report', {})
+            report_node = data.get('report', {})
+            if not report_node:
+                raise AlmaApiError("Missing <report> root element in XML response.")
 
-            # Simplified fallback logic
-            if not report_element:
-                report_element = query_result.get('ResultXml', {}).get('rowset', {}) or \
-                                 query_result.get('ResultXml', {}) or \
-                                 query_result
+            query_result = report_node.get('QueryResult', {})
+            if not query_result:
+                raise AlmaApiError("Missing <QueryResult> element in XML response.")
 
             parsed: Dict[str, Any] = {}
 
-            # Extract ResumptionToken and IsFinished (handle potential dict structure from xmltodict)
-            token = query_result.get('ResumptionToken') or report_element.get('ResumptionToken')
-            is_finished_val = query_result.get('IsFinished') or report_element.get('IsFinished')
+            # Extract ResumptionToken and IsFinished from QueryResult
+            token_val = query_result.get('ResumptionToken')
+            is_finished_val = query_result.get('IsFinished')
 
+            is_finished_str: Optional[str] = None
             if isinstance(is_finished_val, dict) and '#text' in is_finished_val:
                 is_finished_str = is_finished_val.get('#text')
             elif isinstance(is_finished_val, str):
                 is_finished_str = is_finished_val
-            else:
-                is_finished_str = None  # Or raise if strictly required
 
-            # Pass the key expected by the model (using alias)
             if is_finished_str is not None:
-                parsed['IsFinished'] = is_finished_str  # Let model handle bool parsing
+                parsed['IsFinished'] = is_finished_str  # Model alias
             else:
-                raise AlmaApiError("Missing 'IsFinished' flag after parsing XML response.")
+                raise AlmaApiError("Missing 'IsFinished' flag in <QueryResult> after parsing XML response.")
 
-            if isinstance(token, dict) and '#text' in token:
-                parsed['ResumptionToken'] = token.get('#text')
-            elif isinstance(token, str):
-                parsed['ResumptionToken'] = token
+            if token_val is not None:
+                if isinstance(token_val, dict) and '#text' in token_val:
+                    parsed['ResumptionToken'] = token_val.get('#text')  # Model alias
+                elif isinstance(token_val, str):
+                    parsed['ResumptionToken'] = token_val
 
-            # Extract Rows
-            rows_data = report_element.get('Row', [])
+            # Extract Rows and Schema from QueryResult.ResultXml.rowset
+            result_xml_node = query_result.get('ResultXml', {})
+            rowset_node = result_xml_node.get('rowset', {})  # Namespace was stripped by xmltodict options
+
+            rows_data = rowset_node.get('Row', [])
             if not isinstance(rows_data, list):
                 rows_data = [rows_data] if rows_data else []
 
@@ -93,26 +89,59 @@ class AnalyticsAPI:
             for row in rows_data:
                 if not isinstance(row, dict):
                     continue
-                # Extract values, potentially from '#text' sub-key if attributes exist
                 row_dict = {}
                 for k, v in row.items():
-                    if k.startswith('Column'):
+                    if k.startswith('Column'):  # Process only column elements
                         row_dict[k] = v.get('#text') if isinstance(v, dict) else v
                 parsed_rows.append(row_dict)
+            parsed['rows'] = parsed_rows  # Model field name
 
-            parsed['rows'] = parsed_rows
+            # Extract Columns from schema within rowset
+            parsed_columns = []
+            schema_node = rowset_node.get('xsd:schema')  # Check for prefixed schema tag
 
-            # Placeholder/Simplified Column Extraction - Needs improvement for accuracy
-            parsed['columns'] = []
-            schema = query_result.get('ResultXml', {}).get('xsd:schema') or query_result.get('ResultXml', {}).get(
-                'Schema')
-            # TODO: Add robust schema parsing here if needed for columns
+            if schema_node and isinstance(schema_node, dict):
+                complex_type_node = schema_node.get('xsd:complexType')
+                # Handle if complexType is a list (e.g. multiple complexType definitions)
+                if isinstance(complex_type_node, list):
+                    complex_type_node = next(
+                        (ct for ct in complex_type_node if isinstance(ct, dict) and ct.get('@name') == 'Row'), None)
 
-            parsed['query_path'] = report_element.get('QueryPath')
+                if complex_type_node and isinstance(complex_type_node, dict) and complex_type_node.get(
+                        '@name') == 'Row':
+                    sequence_node = complex_type_node.get('xsd:sequence')
+                    if sequence_node and isinstance(sequence_node, dict):
+                        elements = sequence_node.get('xsd:element', [])
+                        if not isinstance(elements, list):
+                            elements = [elements] if elements else []
+
+                        for elem in elements:
+                            if isinstance(elem, dict):
+                                col_name = elem.get('@saw-sql:columnHeading', elem.get('@name'))
+                                col_type = elem.get('@type')
+                                if col_name:
+                                    parsed_columns.append({"name": col_name, "data_type": col_type})
+            parsed['columns'] = parsed_columns  # Model field name
+
+            # Extract QueryPath (if it exists, likely under QueryResult)
+            query_path_val = query_result.get('QueryPath')
+            if query_path_val is not None:
+                if isinstance(query_path_val, dict) and '#text' in query_path_val:
+                    parsed['QueryPath'] = query_path_val.get('#text')  # Model alias
+                elif isinstance(query_path_val, str):
+                    parsed['QueryPath'] = query_path_val
+
+            # Extract JobID (if it exists, likely under QueryResult)
+            job_id_val = query_result.get('JobID')
+            if job_id_val is not None:
+                if isinstance(job_id_val, dict) and '#text' in job_id_val:
+                    parsed['JobID'] = job_id_val.get('#text')  # Model alias
+                elif isinstance(job_id_val, str):
+                    parsed['JobID'] = job_id_val
 
             return parsed
 
-        except ExpatError as e:  # Catch specific XML parsing error
+        except ExpatError as e:
             raise AlmaApiError(f"Failed to parse Analytics XML response: {e}",
                                response=getattr(e, 'response', None)) from e
         except Exception as e:
@@ -140,103 +169,119 @@ class AnalyticsAPI:
         if filter_xml:
             params["filter"] = filter_xml
 
-        headers = {"Accept": "*/*"}
+        headers = {"Accept": "*/*"}  # Request any content type, then parse based on response
         response = self.client._get(endpoint, params=params, headers=headers)
         content_type = response.headers.get("Content-Type", "")
-        report_data_for_model: Dict[str, Any] = {}  # Initialize dict to pass to model
+        report_data_for_model: Dict[str, Any]
 
         try:
             if "application/json" in content_type:
                 raw_response_data = response.json()
-                # Find the main container
                 container = None
                 if 'QueryResult' in raw_response_data and isinstance(raw_response_data['QueryResult'], dict):
                     container = raw_response_data['QueryResult']
-                elif 'Report' in raw_response_data and isinstance(raw_response_data['Report'], dict):
+                elif 'Report' in raw_response_data and isinstance(raw_response_data['Report'],
+                                                                  dict):  # Check for 'Report' as well
                     container = raw_response_data['Report']
                 else:
-                    container = raw_response_data  # Assume flat structure
+                    container = raw_response_data
 
-                # Extract fields needed by the model, respecting aliases
-                # IsFinished (Required)
+                report_data_for_model = {}
+
                 is_finished_val = container.get('IsFinished')
-                if is_finished_val is None:
-                    is_finished_val = raw_response_data.get('IsFinished')  # Check root
+                if is_finished_val is None and container is not raw_response_data:
+                    is_finished_val = raw_response_data.get('IsFinished')
                 if is_finished_val is None:
                     raise AlmaApiError("Missing 'IsFinished' flag in JSON response.")
-                report_data_for_model['IsFinished'] = is_finished_val  # Use model's alias key
+                report_data_for_model['IsFinished'] = is_finished_val
 
-                # ResumptionToken (Optional)
                 res_token = container.get('ResumptionToken')
-                if res_token is None:
-                    res_token = raw_response_data.get('ResumptionToken')  # Check root
+                if res_token is None and container is not raw_response_data:
+                    res_token = raw_response_data.get('ResumptionToken')
                 if res_token is not None:
-                    report_data_for_model['ResumptionToken'] = res_token  # Use model's alias key
+                    report_data_for_model['ResumptionToken'] = res_token
 
-                # Rows and Columns (Potentially nested)
                 rowset = None
-                result_xml = container.get('ResultXml')
-                if result_xml and isinstance(result_xml, dict):
-                    rowset = result_xml.get('rowset')
-                elif 'rowset' in container:
+                result_xml_container = container.get('ResultXml')  # ResultXml might be a key in the JSON
+                if result_xml_container and isinstance(result_xml_container, dict):
+                    rowset = result_xml_container.get('rowset')
+                elif 'rowset' in container:  # rowset might be directly under container
                     rowset = container.get('rowset')
 
                 if rowset and isinstance(rowset, dict):
                     rows_data = rowset.get('Row', [])
                     if not isinstance(rows_data, list):
                         rows_data = [rows_data] if rows_data else []
-                    report_data_for_model['rows'] = rows_data  # Assign rows directly
+                    report_data_for_model['rows'] = rows_data
 
-                    # Column Extraction (Simplified)
                     columns_list = []
-                    schema = result_xml.get('xsd:schema') if result_xml else container.get('xsd:schema')  # Find schema
+                    # Schema might be under ResultXml or directly under container/rowset in JSON
+                    schema_container = result_xml_container if result_xml_container and isinstance(result_xml_container,
+                                                                                                   dict) else rowset
+                    if not schema_container:  # Fallback to container if still not found
+                        schema_container = container
+
+                    schema = schema_container.get('xsd:schema',
+                                                  schema_container.get('schema'))  # Try with and without prefix
                     if schema and isinstance(schema, dict):
                         try:
-                            elements = schema.get('complexType', {}).get('sequence', {}).get('element', [])
+                            complex_type = schema.get('complexType', {})
+                            elements_container = complex_type.get('sequence', {})
+                            elements = elements_container.get('element', [])
+
                             if not isinstance(elements, list):
-                                elements = [elements]
+                                elements = [elements] if elements else []
                             for elem in elements:
                                 if isinstance(elem, dict):
-                                    col_name = elem.get('@saw-sql:columnHeading', elem.get('@name'))
-                                    col_type = elem.get('@type')
+                                    # In JSON, attributes are often prefixed with '@' by xmltodict if converted
+                                    col_name = elem.get('@saw-sql:columnHeading', elem.get('saw-sql:columnHeading',
+                                                                                           elem.get('@name',
+                                                                                                    elem.get('name'))))
+                                    col_type = elem.get('@type', elem.get('type'))
                                     if col_name:
-                                        columns_list.append({"name": col_name, "data_type": col_type})  # Create dicts
+                                        columns_list.append({"name": col_name, "data_type": col_type})
                         except Exception:
-                            pass  # Ignore schema parsing errors
-                    report_data_for_model['columns'] = columns_list  # Assign columns list
+                            pass
+                    report_data_for_model['columns'] = columns_list
                 else:
                     report_data_for_model.setdefault('rows', [])
                     report_data_for_model.setdefault('columns', [])
 
-                # Other optional fields
-                report_data_for_model['query_path'] = container.get('QueryPath')
-                report_data_for_model['job_id'] = container.get('JobID')
+                query_path_val = container.get('QueryPath')
+                if query_path_val is None and container is not raw_response_data:
+                    query_path_val = raw_response_data.get('QueryPath')
+                if query_path_val is not None:
+                    report_data_for_model['QueryPath'] = query_path_val
+
+                job_id_val = container.get('JobID')
+                if job_id_val is None and container is not raw_response_data:
+                    job_id_val = raw_response_data.get('JobID')
+                if job_id_val is not None:
+                    report_data_for_model['JobID'] = job_id_val
 
             elif "xml" in content_type:
-                warnings.warn("Received XML response for Analytics report, parsing may be less accurate than JSON. "
+                warnings.warn("Received XML response for Analytics report. Parsing may be less accurate than JSON. "
                               "Consider adjusting request headers or checking API capabilities.", UserWarning)
-                # Use the XML parser helper (which should raise if IsFinished is missing)
                 report_data_for_model = self._parse_analytics_xml_results(response.content)
-
             else:
                 raise AlmaApiError(f"Unexpected Content-Type received: {content_type}", response=response,
                                    url=response.url)
 
-            # Now instantiate the model with the prepared dictionary
             results = AnalyticsReportResults.model_validate(report_data_for_model)
-            if results.query_path is None:
-                results.query_path = path  # Add path if missing
+            if results.query_path is None:  # Ensure query_path is set from the input if not in response
+                results.query_path = path
             return results
 
-        # --- Catch specific parsing/validation errors and wrap them ---
         except requests.exceptions.JSONDecodeError as e:
             raise AlmaApiError(f"Failed to decode JSON response: {e}", response=response, url=response.url) from e
-        except ExpatError as e:  # Catch XML error specifically if needed after _parse call
+        except ExpatError as e:  # This would be raised from _parse_analytics_xml_results
             raise AlmaApiError(f"Failed to parse XML response: {e}", response=response, url=response.url) from e
         except ValidationError as e:
             raise AlmaApiError(f"Failed to validate API response against model: {e}", response=response,
                                url=response.url) from e
-        except Exception as e:  # Catch any other unexpected errors during processing
+        except AlmaApiError:  # Re-raise AlmaApiErrors from _parse_analytics_xml_results
+            raise
+        except Exception as e:
             raise AlmaApiError(f"An unexpected error occurred processing the report response: {e}", response=response,
                                url=response.url) from e
 
@@ -245,45 +290,47 @@ class AnalyticsAPI:
         """ Lists available paths, removed conditional validation """
         endpoint = "/analytics/paths"
         params = {"path": folder_path} if folder_path else {}
-        headers = {"Accept": "application/json, application/xml;q=0.9"}
+        headers = {"Accept": "application/json, application/xml;q=0.9"}  # Prefer JSON
 
         response = self.client._get(endpoint, params=params, headers=headers)
         content_type = response.headers.get("Content-Type", "")
-        paths = []
+        paths_list: List[AnalyticsPath] = []
 
         try:
             if "application/json" in content_type:
                 data = response.json()
-                path_list = data.get("path", [])
-                if not isinstance(path_list, list):
-                    path_list = [path_list]
+                # Alma often wraps lists: {"path": [...]} or {"AnalyticsPathsResult": {"path": [...]}}
+                path_items_data = data.get("path", data.get("AnalyticsPathsResult", {}).get("path", []))
 
-                for item in path_list:
-                    if isinstance(item, str):
-                        paths.append(AnalyticsPath(path=item))
-                    elif isinstance(item, dict):
+                if not isinstance(path_items_data, list):
+                    path_items_data = [path_items_data] if path_items_data else []
+
+                for item in path_items_data:
+                    if isinstance(item, str):  # Simple path string
+                        paths_list.append(AnalyticsPath(path=item))
+                    elif isinstance(item, dict):  # Dictionary with attributes
+                        # xmltodict often prefixes attributes with '@', remove if present for model validation
                         path_detail = {k.lstrip('@'): v for k, v in item.items()}
-                        # --- FIX: Validate directly, let model handle missing 'path' ---
-                        paths.append(AnalyticsPath.model_validate(path_detail))
+                        paths_list.append(AnalyticsPath.model_validate(path_detail))
 
             elif "xml" in content_type:
                 data = xmltodict.parse(response.content)
-                path_list = data.get("AnalyticsPathsResult", {}).get("path", [])
-                if not isinstance(path_list, list):
-                    path_list = [path_list]
+                path_items_data = data.get("AnalyticsPathsResult", {}).get("path", [])
+                if not isinstance(path_items_data, list):
+                    path_items_data = [path_items_data] if path_items_data else []
 
-                for item in path_list:
+                for item in path_items_data:
                     if isinstance(item, dict):
+                        # xmltodict prefixes attributes with '@'
                         path_detail = {k.lstrip('@'): v for k, v in item.items()}
-                        # --- FIX: Validate directly, let model handle missing 'path' ---
-                        paths.append(AnalyticsPath.model_validate(path_detail))
+                        paths_list.append(AnalyticsPath.model_validate(path_detail))
+                    elif isinstance(item, str):  # Should not happen if XML is structured with attributes
+                        paths_list.append(AnalyticsPath(path=item))
             else:
                 raise AlmaApiError(f"Unexpected Content-Type for paths: {content_type}", response=response,
                                    url=response.url)
+            return paths_list
 
-            return paths  # Return successful result
-
-        # --- Catch specific errors ---
         except requests.exceptions.JSONDecodeError as e:
             raise AlmaApiError(f"Failed to decode JSON response for paths: {e}", response=response,
                                url=response.url) from e
@@ -292,6 +339,8 @@ class AnalyticsAPI:
                                url=response.url) from e
         except ValidationError as e:
             raise AlmaApiError(f"Failed to validate paths data: {e}", response=response, url=response.url) from e
-        except Exception as e:  # Catch-all for other processing errors
+        except AlmaApiError:  # Re-raise
+            raise
+        except Exception as e:
             raise AlmaApiError(f"An unexpected error occurred processing paths response: {e}", response=response,
                                url=response.url) from e
