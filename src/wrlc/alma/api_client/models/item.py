@@ -79,10 +79,30 @@ class ItemData(BaseModel):
 
     @field_validator('creation_date', 'modification_date', mode='before')
     def _validate_item_datetime_str(cls, v: Any) -> Optional[datetime]:
+        if isinstance(v, str) and v.endswith('Z') and 'T' not in v:
+            # Handles "YYYY-MM-DDZ" by converting to "YYYY-MM-DDTHH:MM:SSZ"
+            date_part = v[:-1]
+            try:
+                # Ensure the part before 'Z' is a valid date
+                datetime.strptime(date_part, '%Y-%m-%d')
+                v = f"{date_part}T00:00:00Z"  # Assume midnight UTC
+            except ValueError:
+                # If not YYYY-MM-DDZ, pass original to helper
+                pass
         return parse_datetime_optional(v)
 
     @field_validator('arrival_date', 'inventory_date', mode='before')
     def _validate_item_date_str(cls, v: Any) -> Optional[date]:
+        if isinstance(v, str) and v.endswith('Z'):
+            # Handles "YYYY-MM-DDZ" by stripping 'Z'
+            date_part = v[:-1]
+            try:
+                # Ensure the part before 'Z' is a valid date
+                datetime.strptime(date_part, '%Y-%m-%d')
+                v = date_part
+            except ValueError:
+                # If not YYYY-MM-DDZ, pass original to helper
+                pass
         return parse_date_optional(v)
 
     @field_validator('is_magnetic', 'requested', mode='before')
