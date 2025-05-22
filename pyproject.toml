@@ -1,6 +1,6 @@
 [project]
 name = "wrlc-alma-api-client"
-version = "0.1.8"
+version = "0.1.9"
 description = ""
 authors = [
     {name = "Tom Boone",email = "boone@wrlc.org"}
