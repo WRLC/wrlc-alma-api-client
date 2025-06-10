@@ -4,7 +4,7 @@ charset-normalizer==3.4.2
 idna==3.10
 iniconfig==2.1.0
 packaging==25.0
-pluggy==1.5.0
+pluggy==1.6.0
 pydantic==2.11.4
 pydantic_core==2.33.2
 pytest==8.3.5
@@ -13,5 +13,5 @@ requests==2.32.3
 typing-inspection==0.4.0
 typing_extensions==4.13.2
 urllib3==2.4.0
--e git+ssh://git@github.com/WRLC/wrlc-alma-api-client.git@a2802d8bd117c7cfd0a7dd98b89215e8ff0f2f7c#egg=wrlc_alma_api_client
+-e git+ssh://git@github.com/WRLC/wrlc-alma-api-client.git@e7b55547d03a4e4028543333b67cd935c0df179e#egg=wrlc_alma_api_client
 xmltodict==0.14.2
