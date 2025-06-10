@@ -11,8 +11,8 @@ Pygments==2.19.1
 pytest==8.4.0
 pytest-mock==3.14.1
 requests==2.32.4
-typing-inspection==0.4.0
+typing-inspection==0.4.1
 typing_extensions==4.14.0
 urllib3==2.4.0
--e git+ssh://git@github.com/WRLC/wrlc-alma-api-client.git@cc75901c04eae0c703c814302ab050efcc958585#egg=wrlc_alma_api_client
+-e git+ssh://git@github.com/WRLC/wrlc-alma-api-client.git@c3ed2a24edc5bf7e7c8a5d6206b7ad0f83f27e6e#egg=wrlc_alma_api_client
 xmltodict==0.14.2
