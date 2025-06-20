@@ -13,6 +13,6 @@ pytest-mock==3.14.1
 requests==2.32.4
 typing-inspection==0.4.1
 typing_extensions==4.14.0
-urllib3==2.4.0
--e git+ssh://git@github.com/WRLC/wrlc-alma-api-client.git@c3ed2a24edc5bf7e7c8a5d6206b7ad0f83f27e6e#egg=wrlc_alma_api_client
+urllib3==2.5.0
+-e git+ssh://git@github.com/WRLC/wrlc-alma-api-client.git@3f855ace87c787e8abeb9bf6e136ba98d52d23e2#egg=wrlc_alma_api_client
 xmltodict==0.14.2
