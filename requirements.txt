@@ -14,5 +14,4 @@ requests==2.32.4
 typing-inspection==0.4.1
 typing_extensions==4.14.0
 urllib3==2.5.0
--e git+ssh://git@github.com/WRLC/wrlc-alma-api-client.git@94518e8df46c003efc1ec35c5e7f252beb3d9e26#egg=wrlc_alma_api_client
 xmltodict==0.14.2
