@@ -7,12 +7,12 @@ packaging==25.0
 pluggy==1.6.0
 pydantic==2.11.7
 pydantic_core==2.33.2
-Pygments==2.19.1
+Pygments==2.19.2
 pytest==8.4.0
 pytest-mock==3.14.1
 requests==2.32.4
 typing-inspection==0.4.1
 typing_extensions==4.14.0
 urllib3==2.5.0
--e git+ssh://git@github.com/WRLC/wrlc-alma-api-client.git@9c85305159474677da87173dabecab1001d68b73#egg=wrlc_alma_api_client
+-e git+ssh://git@github.com/WRLC/wrlc-alma-api-client.git@21cd8035c24cf6ae47235414637ff1f183632d4e#egg=wrlc_alma_api_client
 xmltodict==0.14.2
