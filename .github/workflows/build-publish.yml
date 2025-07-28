@@ -36,8 +36,8 @@ jobs:
 
       - name: Configure Poetry for Azure Artifacts
         run: |
-          poetry config repositories.PrivateRepos https://pkgs.dev.azure.com/WRLCdev/Python/_packaging/PrivateRepos/pypi/upload/
-          poetry config http-basic.PrivateRepos __token__ ${{ secrets.AZURE_DEVOPS_PAT }}
+          poetry config repositories.wrlc-alma-api-client https://pkgs.dev.azure.com/WRLCdev/Python/_packaging/wrlc-alma-api-client/pypi/upload/
+          poetry config http-basic.wrlc-alma-api-client __token__ ${{ secrets.AZURE_DEVOPS_PAT }}
 
       - name: Install dependencies
         run: poetry install --with dev --no-interaction
@@ -49,4 +49,4 @@ jobs:
         run: poetry build
 
       - name: Publish package
-        run: poetry publish --repository PrivateRepos --no-interaction
+        run: poetry publish --repository wrlc-alma-api-client --no-interaction
