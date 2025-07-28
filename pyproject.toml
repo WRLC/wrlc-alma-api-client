@@ -1,22 +1,21 @@
-[project]
+[tool.poetry]
 name = "wrlc-alma-api-client"
-version = "0.1.13"
-description = ""
-authors = [
-    {name = "Tom Boone",email = "boone@wrlc.org"}
-]
+version = "0.1.14"
+description = "Python library providing a convenient interface for the Ex Libris Alma REST APIs."
+authors = ["Tom Boone <boone@wrlc.org>"]
 readme = "README.md"
-requires-python = ">=3.11"
-dependencies = [
-    "pydantic (>=2.11.4,<3.0.0)",
-    "requests>=2.31.0,<3.0.0",
-    "xmltodict>=0.13.0,<0.15.0"
-]
+packages = [{include = "wrlc_alma_api_client"}]
+
+[tool.poetry.dependencies]
+python = ">=3.11"
+pydantic = ">=2.11.4,<3.0.0"
+requests = ">=2.31.0,<3.0.0"
+xmltodict = ">=0.13.0,<0.15.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
 pytest-mock = "^3.14.0"
 
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
