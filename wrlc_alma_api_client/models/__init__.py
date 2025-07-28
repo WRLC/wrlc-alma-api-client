@@ -5,10 +5,10 @@ This package contains Pydantic models representing various data structures
 returned by or sent to the Ex Libris Alma REST APIs that this client supports.
 """
 
-from wrlc.alma.api_client.models.bib import Bib, CodeDesc
-from wrlc.alma.api_client.models.holding import Holding, BibLinkData
-from wrlc.alma.api_client.models.item import Item, ItemData
-from wrlc.alma.api_client.models.analytics import AnalyticsReportResults, AnalyticsColumn, AnalyticsPath
+from wrlc_alma_api_client.models.bib import Bib, CodeDesc
+from wrlc_alma_api_client.models.holding import Holding, BibLinkData
+from wrlc_alma_api_client.models.item import Item, ItemData
+from wrlc_alma_api_client.models.analytics import AnalyticsReportResults, AnalyticsColumn, AnalyticsPath
 
 __all__ = [
     # From analytics.py

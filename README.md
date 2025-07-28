@@ -31,8 +31,8 @@ pip install wrlc-alma-api-client
 ## Quick Start
 
 ```python
-from wrlc.alma.api_client import AlmaApiClient
-from wrlc.alma.api_client.exceptions import AlmaApiError, NotFoundError
+from wrlc_alma_api_client.client import AlmaApiClient
+from wrlc_alma_api_client.exceptions import AlmaApiError, NotFoundError
 import os
 
 # --- Configuration ---

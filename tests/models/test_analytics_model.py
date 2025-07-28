@@ -3,7 +3,7 @@
 import warnings
 import pytest
 from pydantic import ValidationError
-from wrlc.alma.api_client.models.analytics import AnalyticsColumn, AnalyticsReportResults, AnalyticsPath
+from wrlc_alma_api_client.models.analytics import AnalyticsColumn, AnalyticsReportResults, AnalyticsPath
 
 
 def test_analytics_column_success():
