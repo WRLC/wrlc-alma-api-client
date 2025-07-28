@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "wrlc-alma-api-client"
-version = "0.1.17"
+version = "0.1.0"
 description = "Python library providing a convenient interface for the Ex Libris Alma REST APIs."
 authors = ["Tom Boone <boone@wrlc.org>"]
 readme = "README.md"
@@ -15,6 +15,11 @@ xmltodict = ">=0.13.0,<0.15.0"
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
 pytest-mock = "^3.14.0"
+
+[[tool.poetry.source]]
+name = "PrivateRepos"
+url = "https://pkgs.dev.azure.com/WRLCdev/Python/_packaging/PrivateRepos/pypi/simple/"
+priority = "primary"
 
 [build-system]
 requires = ["poetry-core"]
