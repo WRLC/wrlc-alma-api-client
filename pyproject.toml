@@ -16,11 +16,6 @@ xmltodict = ">=0.13.0,<0.15.0"
 pytest = "^8.3.5"
 pytest-mock = "^3.14.0"
 
-[[tool.poetry.source]]
-name = "wrlc-python"
-url = "https://pkgs.dev.azure.com/WRLCdev/Python/_packaging/wrlc-python/pypi/simple/"
-priority = "primary"
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
