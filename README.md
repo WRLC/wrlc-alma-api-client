@@ -105,7 +105,7 @@ The client raises specific exceptions derived from `AlmaApiError` for issues:
 
 Exceptions contain `status_code`, the original `requests.Response` object (`response`), the requested `url`, and potentially extracted error details (`detail`) where possible.
 
-# Development
+## Development
 
 This project uses [Poetry](https://python-poetry.org/) for dependency management and packaging.
 
