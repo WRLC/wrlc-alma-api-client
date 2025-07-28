@@ -22,10 +22,23 @@ Requires Python 3.8+ (due to dependencies like `importlib.metadata` and Pydantic
 Dependencies: `requests`, `pydantic`, `xmltodict`.
 
 ## Installation
-Install via pip:
 
-```bash
-pip install wrlc-alma-api-client
+This package is distributed via GitHub Releases. You can install it using `pip` or `poetry` by providing the URL to the wheel file from a specific release.
+
+1.  Go to the Releases page.
+2.  Choose a release version (e.g., `v0.1.14`).
+3.  Under "Assets", copy the link to the `.whl` file.
+
+### Using `poetry` (Recommended)
+
+```shell
+poetry add {link-to-release-whl-file}
+```
+
+### Using `pip`
+
+```shell
+pip install {link-to-release-whl-file}
 ```
 
 ## Quick Start
