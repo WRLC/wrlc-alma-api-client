@@ -3,7 +3,7 @@
 from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field, field_validator
 from datetime import datetime
-from wrlc.alma.api_client.models.utils import parse_boolean_optional, parse_datetime_optional
+from wrlc_alma_api_client.models.utils import parse_boolean_optional, parse_datetime_optional
 
 
 class CodeDesc(BaseModel):

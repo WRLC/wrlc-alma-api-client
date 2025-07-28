@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING, Optional, Dict, List, Any
 import xmltodict
 from xml.parsers.expat import ExpatError
 from pydantic import ValidationError
-from wrlc.alma.api_client.exceptions import AlmaApiError
-from wrlc.alma.api_client.models.analytics import AnalyticsReportResults, AnalyticsPath
+from wrlc_alma_api_client.exceptions import AlmaApiError
+from wrlc_alma_api_client.models.analytics import AnalyticsReportResults, AnalyticsPath
 
 # Use TYPE_CHECKING to avoid circular import issues with the client
 if TYPE_CHECKING:

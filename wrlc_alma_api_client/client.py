@@ -3,11 +3,11 @@
 import requests
 from typing import Optional, Dict, Any, Union
 import importlib.metadata
-from wrlc.alma.api_client.exceptions import AlmaApiError, AuthenticationError
-from wrlc.alma.api_client.api.analytics import AnalyticsAPI
-from wrlc.alma.api_client.api.bib import BibsAPI
-from wrlc.alma.api_client.api.holding import HoldingsAPI
-from wrlc.alma.api_client.api.item import ItemsAPI
+from wrlc_alma_api_client.exceptions import AlmaApiError, AuthenticationError
+from wrlc_alma_api_client.api.analytics import AnalyticsAPI
+from wrlc_alma_api_client.api.bib import BibsAPI
+from wrlc_alma_api_client.api.holding import HoldingsAPI
+from wrlc_alma_api_client.api.item import ItemsAPI
 
 try:
     # noinspection PyUnresolvedReferences

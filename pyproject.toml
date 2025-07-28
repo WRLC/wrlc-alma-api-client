@@ -13,21 +13,10 @@ dependencies = [
     "xmltodict>=0.13.0,<0.15.0"
 ]
 
-[tool.poetry]
-name = "wrlc-alma-api-client"
-version = "0.1.0"
-description = "A Python client for the Ex Libris Alma REST APIs"
-authors = ["Tom Boone <boone@wrlc.org>"]
-readme = "README.md"
-license = "MIT"
-packages = [
-    { include = "wrlc", from = "src" }
-]
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.5"
+pytest-mock = "^3.14.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.3.5"
-pytest-mock = "^3.14.0"

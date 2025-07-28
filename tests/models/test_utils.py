@@ -4,7 +4,7 @@ import pytest
 import warnings
 from datetime import datetime, date, timezone, timedelta
 
-from wrlc.alma.api_client.models.utils import parse_datetime_optional, parse_date_optional, parse_boolean_optional
+from wrlc_alma_api_client.models.utils import parse_datetime_optional, parse_date_optional, parse_boolean_optional
 
 
 @pytest.mark.parametrize(
