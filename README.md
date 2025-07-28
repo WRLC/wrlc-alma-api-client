@@ -113,6 +113,6 @@ This project uses [Poetry](https://python-poetry.org/) for dependency management
 2. Install dependencies: `poetry install --with dev`
 3. Run tests: `poetry run pytest`
 
-##License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
