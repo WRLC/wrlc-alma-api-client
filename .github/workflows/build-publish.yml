@@ -36,7 +36,7 @@ jobs:
         run: poetry version ${{ env.VERSION }}
 
       - name: Install dependencies
-        run: poetry install --no-interaction --with-dev
+        run: poetry install --no-interaction --with dev
 
       - name: Run tests
         run: |
