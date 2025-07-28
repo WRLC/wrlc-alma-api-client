@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "wrlc-alma-api-client"
-version = "0.1.16"
+version = "0.1.17"
 description = "Python library providing a convenient interface for the Ex Libris Alma REST APIs."
 authors = ["Tom Boone <boone@wrlc.org>"]
 readme = "README.md"
