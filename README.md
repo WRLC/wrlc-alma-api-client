@@ -23,22 +23,16 @@ Dependencies: `requests`, `pydantic`, `xmltodict`.
 
 ## Installation
 
-This package is distributed via GitHub Releases. You can install it using `pip` or `poetry` by providing the URL to the wheel file from a specific release.
-
-1.  Go to the Releases page.
-2.  Choose a release version (e.g., `v0.1.14`).
-3.  Under "Assets", copy the link to the `.whl` file.
-
 ### Using `poetry` (Recommended)
 
 ```shell
-poetry add {link-to-release-whl-file}
+poetry add git+https://github.com/WRLC/wrlc-alma-api-client.git
 ```
 
 ### Using `pip`
 
 ```shell
-pip install {link-to-release-whl-file}
+pip install git+https://github.com/WRLC/wrlc-alma-api-client.git
 ```
 
 ## Quick Start
