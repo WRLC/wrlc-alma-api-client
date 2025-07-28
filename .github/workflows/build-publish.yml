@@ -34,6 +34,12 @@ jobs:
       - name: Set package version in pyproject.toml
         run: poetry version ${{ env.VERSION }}
 
+      - name: Install dependencies
+        run: poetry install --with dev --no-interaction
+
+      - name: Run tests
+        run: poetry run pytest
+
       - name: Configure Poetry for Azure Artifacts
         run: |
           poetry config repositories.PrivateRepos https://pkgs.dev.azure.com/WRLCdev/Python/_packaging/PrivateRepos/pypi/upload/
