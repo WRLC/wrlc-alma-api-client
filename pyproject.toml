@@ -17,8 +17,8 @@ pytest = "^8.3.5"
 pytest-mock = "^3.14.0"
 
 [[tool.poetry.source]]
-name = "PrivateRepos"
-url = "https://pkgs.dev.azure.com/WRLCdev/Python/_packaging/PrivateRepos/pypi/simple/"
+name = "wrlc-alma-api-client"
+url = "https://pkgs.dev.azure.com/WRLCdev/Python/_packaging/wrlc-alma-api-client/pypi/simple/"
 priority = "primary"
 
 [build-system]
