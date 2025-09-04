@@ -1,5 +1,5 @@
 annotated-types==0.7.0
-certifi==2025.6.15
+certifi==2025.8.3
 charset-normalizer==3.4.2
 idna==3.10
 iniconfig==2.1.0
