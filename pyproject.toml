@@ -10,7 +10,7 @@ packages = [{include = "wrlc_alma_api_client"}]
 python = ">=3.11"
 pydantic = ">=2.11.4,<3.0.0"
 requests = ">=2.31.0,<3.0.0"
-xmltodict = ">=0.13.0,<0.15.0"
+xmltodict = ">=0.13.0,<0.16.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
